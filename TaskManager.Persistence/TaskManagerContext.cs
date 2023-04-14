@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System;
 using TaskManager.Application.Interfaces;
 using TaskManager.Domain;
 
@@ -10,7 +11,7 @@ namespace TaskManager.Persistence
             : base(options) { }
 
         public virtual DbSet<User> Users { get; set; } = null!;
-        public virtual DbSet<Domain.Task> Tasks { get; set; } = null!;
+        public virtual DbSet<Task> Tasks { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -52,7 +53,7 @@ namespace TaskManager.Persistence
                 .HasDefaultValue(UserStatusEnum.Active);
             });
 
-            modelBuilder.Entity<Domain.Task>(entity =>
+            modelBuilder.Entity<Task>(entity =>
             {
                 entity.HasKey(e => e.TaskId)
                    .HasName("task_pkey");
@@ -109,6 +110,21 @@ namespace TaskManager.Persistence
                 entity.Property(e => e.ReceiverId)
                .HasColumnName("receiver_id");
             });
+
+            modelBuilder.Entity<User>().HasData(
+                new User[]
+                {
+                    new User {UserId = 1, Name = "Иван", Surname = "Первый", CreationDate = DateTime.UtcNow.AddDays(-14), LastChangeDate = DateTime.UtcNow.AddDays(-13) , Status = UserStatusEnum.Active},
+                    new User {UserId = 2,Name = "Иван", Surname="Второй", CreationDate = DateTime.UtcNow.AddDays(-13), LastChangeDate = DateTime.UtcNow.AddDays(-12),  Status = UserStatusEnum.Blocked},
+                    new User {UserId = 3,Name = "Иван", Surname="Третий", CreationDate = DateTime.UtcNow.AddDays(-12), LastChangeDate = DateTime.UtcNow.AddDays(-11),  Status = UserStatusEnum.Inactive},
+                    new User {UserId = 4,Name = "Иван", Surname="Четвертый", CreationDate = DateTime.UtcNow.AddDays(-11), LastChangeDate = DateTime.UtcNow.AddDays(-10),  Status = UserStatusEnum.Active}
+                });
+
+            modelBuilder.Entity<Task>().HasData(
+                new Task[]
+                {
+                    new Task { TaskId=1, Name = "Задача 1", Description= "Описание задачи 1", CreationDate = DateTime.UtcNow.AddDays(-4), LastChangeDate = DateTime.UtcNow.AddDays(-4), ReceiverId = 1, SenderId = 2, Status = TaskStatusEnum.NotStarted}
+                });
         }
     }
 }

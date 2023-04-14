@@ -5,6 +5,7 @@ namespace TaskManager.Persistence
     {
         public static void Initialize(TaskManagerContext context)
         {
+            context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
         }
     }

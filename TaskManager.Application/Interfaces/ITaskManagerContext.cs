@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 using TaskManager.Domain;
 
 namespace TaskManager.Application.Interfaces
@@ -10,7 +9,7 @@ namespace TaskManager.Application.Interfaces
     public interface ITaskManagerContext
     {
         DbSet<User> Users { get; set; }
-        DbSet<Domain.Task> Tasks { get; set; }
+        DbSet<Task> Tasks { get; set; }
 
     }
 }

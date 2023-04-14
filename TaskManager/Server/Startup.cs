@@ -1,6 +1,3 @@
-using System.Text;
-using System.Reflection;
-
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Persistence;
 
@@ -43,7 +40,11 @@ namespace TaskManager.Server
                 app.UseWebAssemblyDebugging();
                 app.UseDeveloperExceptionPage();
             }
-            else { app.UseHsts(); }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
 
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
@@ -52,6 +53,8 @@ namespace TaskManager.Server
             app.UseHttpsRedirection();
 
             app.UseCors("AllowAll");
+
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
