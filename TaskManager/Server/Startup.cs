@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Persistence;
+using TaskManager.Application.Common.Mappings;
+using System.Reflection;
+using TaskManager.Application.Interfaces;
+using TaskManager.Application;
 
 namespace TaskManager.Server
 {
@@ -12,6 +16,13 @@ namespace TaskManager.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(config =>
+            {
+                config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
+                config.AddProfile(new AssemblyMappingProfile(typeof(ITaskManagerContext).Assembly));
+            });
+            services.AddApplication();
+
             var connectionString = Configuration["DbConnection"];
             services.AddDbContext<TaskManagerContext>(options =>
             {

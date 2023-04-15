@@ -10,6 +10,5 @@ namespace TaskManager.Application.Interfaces
     {
         DbSet<User> Users { get; set; }
         DbSet<Task> Tasks { get; set; }
-
     }
 }

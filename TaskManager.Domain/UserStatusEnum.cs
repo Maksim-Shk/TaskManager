@@ -1,12 +1,14 @@
+using System.ComponentModel;
+
 namespace TaskManager.Domain
 {
     public enum UserStatusEnum
     {
-        //Активен
+        [Description("Активен")]
         Active,
-        //Отключен
+        [Description("Отключен")]
         Inactive,
-        //Заблокирован
+        [Description("Заблокирован")]
         Blocked
     }
 }

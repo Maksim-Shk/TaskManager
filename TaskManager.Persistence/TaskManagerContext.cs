@@ -48,7 +48,8 @@ namespace TaskManager.Persistence
                 entity.Property(e => e.Status)
                 .HasConversion(v => v.ToString(),
                 v => (UserStatusEnum)Enum.Parse(typeof(UserStatusEnum), v)).IsUnicode(false)
-                //.HasColumnType("text")
+                .HasColumnType("character varying")
+                .HasMaxLength(64)
                 .HasColumnName("status")
                 .HasDefaultValue(UserStatusEnum.Active);
             });
@@ -114,16 +115,19 @@ namespace TaskManager.Persistence
             modelBuilder.Entity<User>().HasData(
                 new User[]
                 {
-                    new User {UserId = 1, Name = "Иван", Surname = "Первый", CreationDate = DateTime.UtcNow.AddDays(-14), LastChangeDate = DateTime.UtcNow.AddDays(-13) , Status = UserStatusEnum.Active},
-                    new User {UserId = 2,Name = "Иван", Surname="Второй", CreationDate = DateTime.UtcNow.AddDays(-13), LastChangeDate = DateTime.UtcNow.AddDays(-12),  Status = UserStatusEnum.Blocked},
-                    new User {UserId = 3,Name = "Иван", Surname="Третий", CreationDate = DateTime.UtcNow.AddDays(-12), LastChangeDate = DateTime.UtcNow.AddDays(-11),  Status = UserStatusEnum.Inactive},
-                    new User {UserId = 4,Name = "Иван", Surname="Четвертый", CreationDate = DateTime.UtcNow.AddDays(-11), LastChangeDate = DateTime.UtcNow.AddDays(-10),  Status = UserStatusEnum.Active}
+                    new User { UserId = 1, Name = "Иван", Surname = "Первый", CreationDate = DateTime.UtcNow.AddDays(-14), LastChangeDate = DateTime.UtcNow.AddDays(-13) , Status = UserStatusEnum.Active},
+                    new User { UserId = 2, Name = "Иван", Surname = "Второй", CreationDate = DateTime.UtcNow.AddDays(-13), LastChangeDate = DateTime.UtcNow.AddDays(-1),  Status = UserStatusEnum.Blocked},
+                    new User { UserId = 3, Name = "Иван", Surname = "Третий", CreationDate = DateTime.UtcNow.AddDays(-12), LastChangeDate = DateTime.UtcNow.AddDays(-11),  Status = UserStatusEnum.Inactive},
+                    new User { UserId = 4, Name = "Иван", Surname = "Четвертый", CreationDate = DateTime.UtcNow.AddDays(-11), LastChangeDate = DateTime.UtcNow.AddDays(-10),  Status = UserStatusEnum.Active}
                 });
 
             modelBuilder.Entity<Task>().HasData(
                 new Task[]
                 {
-                    new Task { TaskId=1, Name = "Задача 1", Description= "Описание задачи 1", CreationDate = DateTime.UtcNow.AddDays(-4), LastChangeDate = DateTime.UtcNow.AddDays(-4), ReceiverId = 1, SenderId = 2, Status = TaskStatusEnum.NotStarted}
+                    new Task { TaskId = 1, Name = "Задача 1", Description = "Описание задачи 1", CreationDate = DateTime.UtcNow.AddDays(-4), LastChangeDate = DateTime.UtcNow.AddDays(-4), ReceiverId = 4, SenderId = 1, Status = TaskStatusEnum.NotStarted},
+                    new Task { TaskId = 2, Name = "Задача 2", Description = "Описание задачи 2", CreationDate = DateTime.UtcNow.AddDays(-3), LastChangeDate = DateTime.UtcNow.AddDays(-2), ReceiverId = 2, SenderId = 1, Status = TaskStatusEnum.Completed},
+                    new Task { TaskId = 3, Name = "Задача 3", Description = "Описание задачи 3", CreationDate = DateTime.UtcNow.AddDays(-2), LastChangeDate = DateTime.UtcNow.AddDays(-1), ReceiverId = 3, SenderId = 1, Status = TaskStatusEnum.InProgress},
+                    new Task { TaskId = 4, Name = "Задача 4", Description = "Описание задачи 4", CreationDate = DateTime.UtcNow.AddDays(-1), LastChangeDate = DateTime.UtcNow, ReceiverId = 3, SenderId = 4, Status = TaskStatusEnum.InProgress}
                 });
         }
     }

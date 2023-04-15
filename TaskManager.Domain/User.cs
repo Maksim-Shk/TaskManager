@@ -46,17 +46,4 @@ namespace TaskManager.Domain
         /// </summary>
         public virtual ICollection<Task> ReceiverTasks { get; set; }
     }
-   
-    //public class UserStatus
-    //{
-    //    private UserStatus(UserStatusEnum @enum)
-    //    {
-    //        Id = (int)@enum;
-    //        Name = @enum.ToString();
-    //    }
-
-    //    public int Id { get; set; }
-    //    public string Name { get; set;}
-
-    //}
 }

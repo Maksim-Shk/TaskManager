@@ -1,16 +1,18 @@
+using System.ComponentModel;
+
 namespace TaskManager.Domain
 {
     public enum TaskStatusEnum
     {
-        //Не начата
+        [Description("Не начата")]
         NotStarted,
-        //В процессе
+        [Description("В процессе")]
         InProgress,
-        //Выполнен
+        [Description("Выполнен")]
         Completed,
-        //Отменен
+        [Description("Отменен")]
         Canceled,
-        //Отклонен
+        [Description("Отклонен")]
         Rejected
     }
 }
