@@ -1,4 +1,48 @@
 ﻿@page "/TaskGrid"
 
+@using Blazorise.DataGrid
+
+@using TaskManager.Application.Tasks.Queries.GetTaskList
+
+@inject NavigationManager NavigationManager
+@inject HttpClient httpClient
+
 <PageTitle>Список задач</PageTitle>
 
+<DataGrid TItem="TaskListDto"
+          Data="@taskListViewModel.Tasks"Responsive
+          Filterable
+          Sortable
+          SortMode="DataGridSortMode.Multiple"
+          ShowPager
+          ShowPageSizes
+          PagerPosition="DataGridPagerPosition.Bottom"
+          PagerOptions="new(){ ButtonSize=Blazorise.Size.Medium}">
+
+    <DataGridColumn Field="@nameof(TaskListDto.Name)" Caption="Название"></DataGridColumn>
+    <DataGridColumn Field="@nameof(TaskListDto.Status)" Caption="Статус"></DataGridColumn>
+    <DataGridColumn Field="@nameof(TaskListDto.ReceiverName)" Caption="Постановщик"></DataGridColumn>
+    <DataGridColumn Field="@nameof(TaskListDto.SenderName)" Caption="Исполнитель"></DataGridColumn>
+    <DataGridColumn Field="@nameof(TaskListDto.CreatedDate)" Caption="Дата создания"></DataGridColumn>
+    <DataGridColumn Field="@nameof(TaskListDto.LastChangeDate)" Caption="Дата последнего обновления"></DataGridColumn>
+    <DataGridColumn Field="@nameof(TaskListDto.Description)" Caption="Описание"></DataGridColumn>
+
+</DataGrid>
+
+@code{
+    TaskListViewModel taskListViewModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            taskListViewModel.Tasks = new List<TaskListDto>();
+            taskListViewModel = await httpClient.GetFromJsonAsync<TaskListViewModel>("Task/GetTaskList");
+
+        }
+        catch (Exception exception)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+}
