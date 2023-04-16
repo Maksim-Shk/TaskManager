@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using System.Threading;
 using TaskManager.Domain;
 
 namespace TaskManager.Application.Interfaces
@@ -9,6 +11,7 @@ namespace TaskManager.Application.Interfaces
     public interface ITaskManagerContext
     {
         DbSet<User> Users { get; set; }
-        DbSet<Task> Tasks { get; set; }
+        DbSet<Domain.Task> Tasks { get; set; }
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
