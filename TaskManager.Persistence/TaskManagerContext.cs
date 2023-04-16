@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using TaskManager.Application.Interfaces;
 using TaskManager.Domain;
 
@@ -112,23 +113,92 @@ namespace TaskManager.Persistence
                .HasColumnName("receiver_id");
             });
 
-            modelBuilder.Entity<User>().HasData(
-                new User[]
+            List<User> users = new List<User>();
+            RandomData randomData = new();
+            Random rand = new();
+            for (int i = 1; i <= 5; i++)
+            {
+                DateTime сreationDate = DateTime.MinValue;
+                DateTime lastChangeDate = DateTime.MinValue;
+                do
                 {
-                    new User { UserId = 1, Name = "Иван", Surname = "Первый", CreationDate = DateTime.UtcNow.AddDays(-14), LastChangeDate = DateTime.UtcNow.AddDays(-13) , Status = UserStatusEnum.Active},
-                    new User { UserId = 2, Name = "Иван", Surname = "Второй", CreationDate = DateTime.UtcNow.AddDays(-13), LastChangeDate = DateTime.UtcNow.AddDays(-1),  Status = UserStatusEnum.Blocked},
-                    new User { UserId = 3, Name = "Иван", Surname = "Третий", CreationDate = DateTime.UtcNow.AddDays(-12), LastChangeDate = DateTime.UtcNow.AddDays(-11),  Status = UserStatusEnum.Inactive},
-                    new User { UserId = 4, Name = "Иван", Surname = "Четвертый", CreationDate = DateTime.UtcNow.AddDays(-11), LastChangeDate = DateTime.UtcNow.AddDays(-10),  Status = UserStatusEnum.Active}
-                });
+                    сreationDate = randomData.RandomDay().AddDays(-10);
+                    lastChangeDate = randomData.RandomDay().AddDays(-5);
 
-            modelBuilder.Entity<Task>().HasData(
-                new Task[]
+                } while (lastChangeDate < сreationDate);
+                User user = new()
                 {
-                    new Task { TaskId = 1, Name = "Задача 1", Description = "Описание задачи 1", CreationDate = DateTime.UtcNow.AddDays(-4), LastChangeDate = DateTime.UtcNow.AddDays(-4), ReceiverId = 4, SenderId = 1, Status = TaskStatusEnum.NotStarted},
-                    new Task { TaskId = 2, Name = "Задача 2", Description = "Описание задачи 2", CreationDate = DateTime.UtcNow.AddDays(-3), LastChangeDate = DateTime.UtcNow.AddDays(-2), ReceiverId = 2, SenderId = 1, Status = TaskStatusEnum.Completed},
-                    new Task { TaskId = 3, Name = "Задача 3", Description = "Описание задачи 3", CreationDate = DateTime.UtcNow.AddDays(-2), LastChangeDate = DateTime.UtcNow.AddDays(-1), ReceiverId = 3, SenderId = 1, Status = TaskStatusEnum.InProgress},
-                    new Task { TaskId = 4, Name = "Задача 4", Description = "Описание задачи 4", CreationDate = DateTime.UtcNow.AddDays(-1), LastChangeDate = DateTime.UtcNow, ReceiverId = 3, SenderId = 4, Status = TaskStatusEnum.InProgress}
-                });
+                    UserId = i,
+                    Name = randomData.GetRandomName(),
+                    Surname = randomData.GetRandomSurname(),
+                    CreationDate = сreationDate,
+                    LastChangeDate = lastChangeDate,
+                    Status = (UserStatusEnum)rand.Next(0, Enum.GetValues(typeof(UserStatusEnum)).Length)
+                };
+                users.Add(user);
+            }
+            List<Task> tasks = new List<Task>();
+            for (int i = 1; i <= 24; i++)
+            {
+                int senderid = rand.Next(0, users.Count);
+                int receiverId;
+                do
+                {
+                    receiverId = rand.Next(0, users.Count);
+                }
+                while (senderid == receiverId);
+
+                UserStatusEnum senderStatus = users[senderid].Status;
+                UserStatusEnum receiverStatus = users[receiverId].Status;
+
+                TaskStatusEnum taskStatus = (TaskStatusEnum)rand.Next(0, Enum.GetValues(typeof(TaskStatusEnum)).Length);
+
+                DateTime creationDate = DateTime.MinValue;
+                DateTime lastChangeDate = DateTime.MinValue;
+
+                if (senderStatus == UserStatusEnum.Blocked || receiverStatus == UserStatusEnum.Blocked)
+                    do
+                    {
+                        creationDate = randomData.RandomDay();
+                        lastChangeDate = randomData.RandomDay();
+
+                    } while (creationDate <= users[senderid].LastChangeDate 
+                    || lastChangeDate <= users[receiverId].LastChangeDate
+                    || lastChangeDate < creationDate
+                    || creationDate == DateTime.MinValue
+                    || lastChangeDate == DateTime.MinValue);
+
+
+                Task task = new()
+                {
+                    TaskId = i,
+                    Name = "Задача №" + i,
+                    Description = "Описание задачи №" + i,
+                    Status = taskStatus,
+                    SenderId = senderid + 1,
+                    ReceiverId = receiverId + 1,
+                    CreationDate = creationDate,
+                    LastChangeDate = lastChangeDate,
+                };
+                tasks.Add(task);
+            }
+            modelBuilder.Entity<User>().HasData(users);
+            //new User[]
+            //{
+            //    new User { UserId = 1, Name = "Иван", Surname = "Первый", CreationDate = DateTime.UtcNow.AddDays(-14), LastChangeDate = DateTime.UtcNow.AddDays(-13) , Status = UserStatusEnum.Active},
+            //    new User { UserId = 2, Name = "Иван", Surname = "Второй", CreationDate = DateTime.UtcNow.AddDays(-13), LastChangeDate = DateTime.UtcNow.AddDays(-1),  Status = UserStatusEnum.Blocked},
+            //    new User { UserId = 3, Name = "Иван", Surname = "Третий", CreationDate = DateTime.UtcNow.AddDays(-12), LastChangeDate = DateTime.UtcNow.AddDays(-11),  Status = UserStatusEnum.Inactive},
+            //    new User { UserId = 4, Name = "Иван", Surname = "Четвертый", CreationDate = DateTime.UtcNow.AddDays(-11), LastChangeDate = DateTime.UtcNow.AddDays(-10),  Status = UserStatusEnum.Active}
+            //});
+
+            modelBuilder.Entity<Task>().HasData(tasks);
+            //new Task[]
+            //{
+            //    new Task { TaskId = 1, Name = "Задача 1", Description = "Описание задачи 1", CreationDate = DateTime.UtcNow.AddDays(-4), LastChangeDate = DateTime.UtcNow.AddDays(-4), ReceiverId = 4, SenderId = 1, Status = TaskStatusEnum.NotStarted},
+            //    new Task { TaskId = 2, Name = "Задача 2", Description = "Описание задачи 2", CreationDate = DateTime.UtcNow.AddDays(-3), LastChangeDate = DateTime.UtcNow.AddDays(-2), ReceiverId = 2, SenderId = 1, Status = TaskStatusEnum.Completed},
+            //    new Task { TaskId = 3, Name = "Задача 3", Description = "Описание задачи 3", CreationDate = DateTime.UtcNow.AddDays(-2), LastChangeDate = DateTime.UtcNow.AddDays(-1), ReceiverId = 3, SenderId = 1, Status = TaskStatusEnum.InProgress},
+            //    new Task { TaskId = 4, Name = "Задача 4", Description = "Описание задачи 4", CreationDate = DateTime.UtcNow.AddDays(-1), LastChangeDate = DateTime.UtcNow, ReceiverId = 3, SenderId = 4, Status = TaskStatusEnum.InProgress}
+            //});
         }
     }
 }
