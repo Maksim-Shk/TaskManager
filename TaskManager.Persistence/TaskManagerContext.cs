@@ -124,8 +124,9 @@ namespace TaskManager.Persistence
                 {
                     ñreationDate = randomData.RandomDay().AddDays(-10);
                     lastChangeDate = randomData.RandomDay().AddDays(-5);
+                } 
+                while (lastChangeDate < ñreationDate);
 
-                } while (lastChangeDate < ñreationDate);
                 User user = new()
                 {
                     UserId = i,

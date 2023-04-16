@@ -9,17 +9,17 @@ using AutoMapper.QueryableExtensions;
 
 namespace TaskManager.Application.Tasks.Queries.GetTaskList
 {
-    public class TaskListQueryHandlers
-  : IRequestHandler<TaskListQuery, TaskListViewModel>
+    public class GetTaskListQueryHandlers
+  : IRequestHandler<GetTaskListQuery, TaskListViewModel>
     {
         private readonly ITaskManagerContext _dbContext;
         private readonly IMapper _mapper;
 
-        public TaskListQueryHandlers(ITaskManagerContext dbContext,
+        public GetTaskListQueryHandlers(ITaskManagerContext dbContext,
            IMapper mapper) =>
            (_dbContext, _mapper) = (dbContext, mapper);
 
-        public async Task<TaskListViewModel> Handle(TaskListQuery request,
+        public async Task<TaskListViewModel> Handle(GetTaskListQuery request,
            CancellationToken cancellationToken)
         {
             var tasks = await _dbContext.Tasks

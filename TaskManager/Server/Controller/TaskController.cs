@@ -23,7 +23,7 @@ namespace TaskManager.Server.Controllers
         [HttpGet("GetTaskList")]
         public async Task<ActionResult<List<TaskListDto>>> SubdivisionGet()
         {
-            var query = new TaskListQuery();
+            var query = new GetTaskListQuery();
             var vm = await Mediator.Send(query);
             return Ok(vm);
         }
