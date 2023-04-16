@@ -6,9 +6,9 @@ using System.Reflection;
 using TaskManager.Application.Common.Mappings;
 using TaskManager.Domain;
 
-namespace TaskManager.Application.Users.Queries.GetUserInfo
+namespace TaskManager.Application.Users.Queries.GetUserList
 {
-    public class UserInfoDto : IMapWith<User>
+    public class UserListDto : IMapWith<User>
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -18,7 +18,7 @@ namespace TaskManager.Application.Users.Queries.GetUserInfo
         public DateTime LastChangeDate { get; set; }
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<User, UserInfoDto>()
+            profile.CreateMap<User, UserListDto>()
                    .ForMember(task => task.Id,
                    opt => opt.MapFrom(dto => dto.UserId))
                    .ForMember(task => task.Name,
