@@ -5,6 +5,7 @@
 
 @using System.Drawing;
 @using TaskManager.Application.Tasks.Queries.GetTaskList
+@using TaskManager.Application.Tasks.Commands.ChangeTaskStatus
 
 @inject NavigationManager NavigationManager
 @inject HttpClient httpClient
@@ -24,7 +25,21 @@
           PagerPosition="DataGridPagerPosition.Bottom"
           PagerOptions="new(){ ButtonSize=Blazorise.Size.Medium}">
 
-    <DataGridColumn Field="@nameof(TaskListDto.Name)" Caption="Название"></DataGridColumn>
+    <DataGridColumn Field="@nameof(TaskListDto.Name)" Caption="Название" Sortable="false">
+        <DisplayTemplate>
+            @{
+                var taskName = (context as TaskListDto)?.Name;
+                var taskId = (context as TaskListDto)?.Id;
+
+                if (taskName != null)
+                {
+                    <a href="TaskInfo/@taskId" class="plain_text">@taskName</a>
+                }
+            }
+        </DisplayTemplate>
+    </DataGridColumn>
+
+    <DataGridColumn Field="@nameof(TaskListDto.Description)" Width="600pt" Caption="Описание"></DataGridColumn>
     <DataGridColumn Field="@nameof(TaskListDto.Status).ToString()" Caption="Статус"></DataGridColumn>
     <DataGridColumn Field="@nameof(TaskListDto.SenderName)" Caption="Постановщик" Sortable="false">
         <DisplayTemplate>
@@ -54,7 +69,6 @@
     </DataGridColumn>
     <DataGridColumn Field="@nameof(TaskListDto.CreatedDate)" Caption="Дата создания"></DataGridColumn>
     <DataGridColumn Field="@nameof(TaskListDto.LastChangeDate)" Caption="Дата последнего обновления"></DataGridColumn>
-    <DataGridColumn Field="@nameof(TaskListDto.Description)" Caption="Описание"></DataGridColumn>
 
 </DataGrid>
 
@@ -62,7 +76,7 @@
 {
     <Div Position="Position.Fixed" Background="Background.Danger" Style="@($"left:{contextMenuPos.X}px;top:{contextMenuPos.Y}px;")">
         <ListGroup>
-            <ListGroupItem Clicked="@(()=>OnContextItemEditClicked(contextMenuTask))">
+            <ListGroupItem Clicked="@(()=>OnContextItemChangeTaskReceiverClicked(contextMenuTask))">
                 <Icon Name="IconName.Edit" TextColor="TextColor.Secondary" /> Назначить
             </ListGroupItem>
         </ListGroup>
@@ -80,7 +94,7 @@
                     @foreach (var status in taskStatuses)
                     {
                         <ListGroupItem Clicked="@(()=>ChangeStatus(contextMenuTask,status))">
-                            <Icon Name="IconName.ArrowRight" TextColor="TextColor.Secondary" />
+                            <Icon Name="IconName.ArrowRight" TextColor="TextColor.Secondary"/> @status
                         </ListGroupItem>
                     }
                 </ListGroup>
@@ -123,12 +137,27 @@
     }
     protected async Task OnContextItemEditClicked(TaskListDto task)
     {
-        NavigationManager.NavigateTo("UpdateUser/" + task.Id);
+        NavigationManager.NavigateTo("UpdateTask/" + task.Id);
 
         showContextMenu = false;
     }
-    protected async Task ChangeStatus(TaskListDto task, string status)
+    protected async Task ChangeStatus(TaskListDto task, string? status)
     {
+        ChangeTaskStatusDto changeTaskStatusDto = new()
+            {
+                Status = status,
+                TaskId = task.Id
+            };
+        var responce = await httpClient.PutAsJsonAsync("Task/ChangeTaskStatus", changeTaskStatusDto); 
+        taskListViewModel = await httpClient.GetFromJsonAsync<TaskListViewModel>("Task/GetTaskList");
+        this.StateHasChanged();
+        showContextMenu = false;
+    }
+
+    protected async Task OnContextItemChangeTaskReceiverClicked(TaskListDto task)
+    {
+        NavigationManager.NavigateTo("ChangeTaskReceiver/" + task.Id);
+
         showContextMenu = false;
     }
 }

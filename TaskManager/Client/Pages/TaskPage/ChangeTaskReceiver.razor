@@ -1,0 +1,80 @@
+﻿@page "/ChangeTaskReceiver/{Id:int}"
+@using TaskManager.Application.Tasks.Commands.ChangeTaskReceiver
+@using TaskManager.Application.Tasks.Queries.GetTask;
+@using TaskManager.Application.Users.Queries.GetUserList
+
+@inject HttpClient httpClient
+@inject NavigationManager NavigationManager
+<PageTitle>Назначить задачу</PageTitle>
+
+<CardBody>
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            Название
+        </dt>
+        <dd class="col-sm-10">
+            @taskDto.Name
+        </dd>
+        <dt class="col-sm-2">
+            Описание
+        </dt>
+        <dd class="col-sm-10">
+            @taskDto.Description
+        </dd>
+        <dt class="col-sm-2">
+            Текущий исполнитель
+        </dt>
+        <dd class="col-sm-10">
+            @taskDto.ReceiverName
+        </dd>
+    </dl>
+
+    <Select @bind-SelectedValue="@taskDto.ReceiverId">
+        <ChildContent>
+            <SelectItem Disabled TValue="int"> Выберите исполнителя</SelectItem>
+            @foreach (var user in userListViewModel.Users)
+            {
+                <SelectItem TValue="int" Value="@user.Id">
+                    @user.Surname @user.Name
+                </SelectItem>
+            }
+        </ChildContent>
+    </Select>
+</CardBody>
+
+<Button Color="Color.Primary" Clicked="@OnSaveClicked"> Сохранить </Button>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    ChangeTaskReceiverDto changeTaskReceiverDto = new();
+    GetTaskDto taskDto = new();
+    UserListViewModel userListViewModel = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            userListViewModel.Users = new List<UserListDto>();
+            taskDto = await httpClient.GetFromJsonAsync<GetTaskDto>("Task/GetTask/" + Id);
+            userListViewModel = await httpClient.GetFromJsonAsync<UserListViewModel>("User/UserList/");
+
+
+        }
+        catch (Exception exception)
+        {
+
+        }
+    }
+
+    private async Task OnSaveClicked()
+    {
+        changeTaskReceiverDto.ReceiverId = taskDto.ReceiverId;
+        changeTaskReceiverDto.TaskId = Id;
+        var responce = await httpClient.PutAsJsonAsync("Task/ChangeTaskReceiver", changeTaskReceiverDto);
+        NavigationManager.NavigateTo("/TaskInfo/" + Id);
+    }
+}

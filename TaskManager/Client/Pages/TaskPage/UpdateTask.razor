@@ -1,0 +1,75 @@
+﻿@page "/UpdateTask/{Id:int}"
+@using TaskManager.Application.Tasks.Commands.UpdateTaskCommand
+@using TaskManager.Application.Users.Queries.GetUserList;
+@using TaskManager.Application.Tasks.Queries.GetTask;
+
+@inject HttpClient httpClient
+@inject NavigationManager NavigationManager
+
+<PageTitle>Редактировать задачу</PageTitle>
+
+<Card Margin="Margin.Is4.OnY">
+    <CardBody>
+        <TextEdit id="name" class="form-control" @bind-Text="@getTaskDto.Name">
+        </TextEdit>
+
+        <TextEdit id="surname" class="form-control" @bind-Text="@getTaskDto.Description">
+        </TextEdit>
+
+        <DateEdit @bind-Date="getTaskDto.CreatedDate" TValue="DateTime" Min="min" Max="DateTimeOffset.Now" DisplayFormat="dd/MM/Y" />
+
+        <Select @bind-SelectedValue="@getTaskDto.ReceiverId">
+        <ChildContent>
+            <SelectItem Disabled TValue="int"> Выберите исполнителя</SelectItem>
+            @foreach (var user in userListViewModel.Users)
+            {
+                <SelectItem TValue="int" Value="@user.Id">
+                    @user.Surname @user.Name
+                </SelectItem>
+            }
+        </ChildContent>
+    </Select>
+
+    </CardBody>
+</Card>
+
+
+
+<Button Color="Color.Primary" Clicked="@OnSaveClicked"> Сохранить </Button>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    DateTimeOffset min = DateTimeOffset.Now.AddYears(-50);
+
+    UserListViewModel userListViewModel = new();
+    UpdateTaskDto updateTaskDto = new();
+    GetTaskDto getTaskDto = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            userListViewModel.Users = new List<UserListDto>();
+            getTaskDto = await httpClient.GetFromJsonAsync<GetTaskDto>("Task/GetTask/" + Id);
+            userListViewModel = await httpClient.GetFromJsonAsync<UserListViewModel>("User/UserList/");
+        }
+        catch (Exception exception)
+        {
+
+        }
+    }
+    private async Task OnSaveClicked()
+    {
+        updateTaskDto.Name = getTaskDto.Name;
+        updateTaskDto.Description = getTaskDto.Description;
+        updateTaskDto.CreationDate = getTaskDto.CreatedDate;
+        updateTaskDto.ReceiverId = getTaskDto.ReceiverId;
+        updateTaskDto.TaskId = Id;
+
+        var responce = await httpClient.PutAsJsonAsync("Task/UpdateTask", updateTaskDto);
+
+        NavigationManager.NavigateTo("/TaskInfo/" + Id);
+    }
+}
