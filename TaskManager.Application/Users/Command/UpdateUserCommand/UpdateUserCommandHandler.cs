@@ -28,7 +28,7 @@ namespace TaskManager.Application.Users.Commands.UpdateUserCommand
 
             user.Name = request.Name;
             user.Surname = request.Surname;
-            user.CreationDate = request.CreationDate;
+            user.CreationDate = request.CreationDate.ToUniversalTime();
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 

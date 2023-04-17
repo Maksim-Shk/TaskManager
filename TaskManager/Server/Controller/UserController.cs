@@ -2,7 +2,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Application.Interfaces;
-using TaskManager.Application.Tasks.Queries.GetTaskList;
 using TaskManager.Application.Users.Commands.CreateUserCommand;
 using TaskManager.Application.Users.Commands.UpdateUserCommand;
 using TaskManager.Application.Users.Queries.GetUserInfo;
@@ -49,7 +48,7 @@ namespace TaskManager.Server.Controllers
             return Ok(vm);
         }
         [HttpGet("UserInfo/{id}")]
-        public async Task<ActionResult<List<UserListDto>>> GetUserInfo(int id)
+        public async Task<ActionResult<UserInfoDto>> GetUserInfo(int id)
         {
             var query = new GetUserInfoQuery
             {

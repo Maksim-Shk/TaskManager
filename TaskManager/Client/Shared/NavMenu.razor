@@ -22,7 +22,7 @@
             <BarItem>
                 <BarDropdown>
                     <BarDropdownToggle>
-                        <BarIcon IconName="IconName.Edit" />
+                        <BarIcon IconName="IconName.Archive" />
                         Задачи
                     </BarDropdownToggle>
                     <BarDropdownMenu>
@@ -37,6 +37,26 @@
                     </BarDropdownMenu>
                 </BarDropdown>
             </BarItem>
+
+            <BarItem>
+                <BarDropdown>
+                    <BarDropdownToggle>
+                        <BarIcon IconName="IconName.User" />
+                        Пользователи
+                    </BarDropdownToggle>
+                    <BarDropdownMenu>
+                        <BarDropdownItem>
+                            <BarLink To="UserGrid">
+                                Просмотреть пользователей
+                            </BarLink>
+                        </BarDropdownItem>
+                        <BarDropdownItem>
+                            <BarLink To="CreateTask">Создать пользователя</BarLink>
+                        </BarDropdownItem>
+                    </BarDropdownMenu>
+                </BarDropdown>
+            </BarItem>
+
         </BarStart>
     </BarMenu>
 </Bar>

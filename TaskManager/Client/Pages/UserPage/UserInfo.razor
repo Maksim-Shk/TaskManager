@@ -1,0 +1,67 @@
+﻿@page "/UserInfo/{Id:int}"
+
+@using Blazorise.DataGrid
+@using TaskManager.Application.Users.Queries.GetUserInfo
+@using TaskManager.Application.Tasks.Queries.GetUserTaskList
+
+@inject NavigationManager NavigationManager
+@inject HttpClient httpClient
+
+<h3>Пользователь @userInfoDto.Surname @userInfoDto.Name</h3>
+
+<dl class="row">
+    <dt class="col-sm-2">
+        Дата регистрации
+    </dt>
+    <dd class="col-sm-10">
+        @userInfoDto.CreatedDate
+    </dd>
+    <dt class="col-sm-2">
+        Дата последнего изменения
+    </dt>
+    <dd class="col-sm-10">
+        @userInfoDto.LastChangeDate
+    </dd>
+    <dt class="col-sm-2">
+        Статус
+    </dt>
+    <dd class="col-sm-10">
+        @userInfoDto.Status
+    </dd>
+</dl>
+
+<h3>Задачи</h3>
+
+<DataGrid TItem="UserTaskListDto"
+          Data="@userTaskListViewModel.Tasks"Responsive
+          Filterable
+          Sortable
+          SortMode="DataGridSortMode.Multiple"
+          ShowPager
+          ShowPageSizes
+          PagerPosition="DataGridPagerPosition.Bottom"
+          PagerOptions="new(){ ButtonSize=Blazorise.Size.Medium}">
+
+    <DataGridColumn Field="@nameof(UserTaskListDto.Name)" Caption="Название"></DataGridColumn>
+    <DataGridColumn Field="@nameof(UserTaskListDto.Status)" Caption="Статус"></DataGridColumn>
+    <DataGridColumn Field="@nameof(UserTaskListDto.SenderName)" Caption="Постановщик" Sortable="false"></DataGridColumn>
+    <DataGridColumn Field="@nameof(UserTaskListDto.ReceiverName)" Caption="Исполнитель" Sortable="false"></DataGridColumn>
+    <DataGridColumn Field="@nameof(UserTaskListDto.CreatedDate)" Caption="Дата создания"></DataGridColumn>
+    <DataGridColumn Field="@nameof(UserTaskListDto.LastChangeDate)" Caption="Дата последнего обновления"></DataGridColumn>
+    <DataGridColumn Field="@nameof(UserTaskListDto.Description)" Caption="Описание"></DataGridColumn>
+
+</DataGrid>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private UserInfoDto userInfoDto = new();
+    private UserTaskListViewModel userTaskListViewModel = new();
+    protected override async Task OnInitializedAsync()
+    {
+        userTaskListViewModel.Tasks = new List<UserTaskListDto>();
+        userInfoDto = await httpClient.GetFromJsonAsync<UserInfoDto>("User/UserInfo/" + Id);
+        userTaskListViewModel = await httpClient.GetFromJsonAsync<UserTaskListViewModel>("Task/GetUserTaskList/" + Id);
+    }
+}

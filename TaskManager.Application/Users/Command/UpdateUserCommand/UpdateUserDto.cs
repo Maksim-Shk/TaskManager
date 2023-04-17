@@ -1,6 +1,6 @@
 using AutoMapper;
+using System;
 using TaskManager.Application.Common.Mappings;
-using TaskManager.Domain;
 
 namespace TaskManager.Application.Users.Commands.UpdateUserCommand
 {
@@ -9,7 +9,7 @@ namespace TaskManager.Application.Users.Commands.UpdateUserCommand
         public int UserId { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public string CreationDate { get; set; }
+        public DateTime CreationDate { get; set; }
         public void Mapping(Profile profile)
         {
             profile.CreateMap<UpdateUserDto, UpdateUserCommand>()

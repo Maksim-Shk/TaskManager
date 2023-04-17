@@ -72,18 +72,19 @@ namespace TaskManager.Persistence
 
                 DateTime creationDate = users[senderid].LastChangeDate.AddDays(rand.Next(0,(users[senderid].LastChangeDate - users[senderid].CreationDate).Days));
                 DateTime lastChangeDate = users[receiverId].LastChangeDate.AddDays(rand.Next(0, (users[receiverId].LastChangeDate - users[receiverId].CreationDate).Days));
-
+                int count = 0;
                 if (senderStatus == UserStatusEnum.Blocked || receiverStatus == UserStatusEnum.Blocked)
                     do
                     {
                         creationDate = users[senderid].LastChangeDate.AddDays(rand.Next(0, Math.Abs((users[receiverId].LastChangeDate - users[senderid].LastChangeDate).Days)));
                         lastChangeDate = creationDate.AddDays(rand.Next(0, 3));//users[receiverId].LastChangeDate.AddDays(rand.Next(0, (users[receiverId].LastChangeDate - users[receiverId].CreationDate).Days));
-
-                    } while (creationDate <= users[senderid].LastChangeDate
+                        count++;
+                    } while ((creationDate <= users[senderid].LastChangeDate
                     || lastChangeDate <= users[receiverId].LastChangeDate
                     || lastChangeDate < creationDate
                     || creationDate == DateTime.MinValue
-                    || lastChangeDate == DateTime.MinValue);
+                    || lastChangeDate == DateTime.MinValue)
+                    && count < 100);
 
 
                 Task task = new()

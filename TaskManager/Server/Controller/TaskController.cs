@@ -29,7 +29,7 @@ namespace TaskManager.Server.Controllers
             return Ok(vm);
         }
         [HttpGet("GetUserTaskList/{id}")]
-        public async Task<ActionResult<List<UserTaskListDto>>> GetUserTaskList(int id)
+        public async Task<ActionResult<UserTaskListViewModel>> GetUserTaskList(int id)
         {
             var query = new GetUserTaskListQuery
             {

@@ -1,0 +1,134 @@
+﻿@page "/TaskGrid"
+
+@using Blazorise.DataGrid
+@using EnumsNET;
+
+@using System.Drawing;
+@using TaskManager.Application.Tasks.Queries.GetTaskList
+
+@inject NavigationManager NavigationManager
+@inject HttpClient httpClient
+
+<PageTitle>Список задач</PageTitle>
+
+<DataGrid TItem="TaskListDto"
+          Data="@taskListViewModel.Tasks" Responsive
+          Filterable
+          Sortable
+          SortMode="DataGridSortMode.Multiple"
+          ShowPager
+          @bind-SelectedRow="@selectedTask"
+          RowContextMenu="@OnRowContextMenu"
+          RowContextMenuPreventDefault="true"
+          ShowPageSizes
+          PagerPosition="DataGridPagerPosition.Bottom"
+          PagerOptions="new(){ ButtonSize=Blazorise.Size.Medium}">
+
+    <DataGridColumn Field="@nameof(TaskListDto.Name)" Caption="Название"></DataGridColumn>
+    <DataGridColumn Field="@nameof(TaskListDto.Status).ToString()" Caption="Статус"></DataGridColumn>
+    <DataGridColumn Field="@nameof(TaskListDto.SenderName)" Caption="Постановщик" Sortable="false">
+        <DisplayTemplate>
+            @{
+                var senderName = (context as TaskListDto)?.SenderName;
+                var senderId = (context as TaskListDto)?.SenderId;
+
+                if (senderName != null)
+                {
+                    <a href="UserInfo/@senderId" class="plain_text">@senderName</a>
+                }
+            }
+        </DisplayTemplate>
+    </DataGridColumn>
+    <DataGridColumn Field="@nameof(TaskListDto.ReceiverName)" Caption="Исполнитель" Sortable="false">
+        <DisplayTemplate>
+            @{
+                var receiverName = (context as TaskListDto)?.ReceiverName;
+                var receiverId = (context as TaskListDto)?.ReceiverId;
+
+                if (receiverName != null)
+                {
+                    <a href="UserInfo/@receiverId" class="plain_text">@receiverName</a>
+                }
+            }
+        </DisplayTemplate>
+    </DataGridColumn>
+    <DataGridColumn Field="@nameof(TaskListDto.CreatedDate)" Caption="Дата создания"></DataGridColumn>
+    <DataGridColumn Field="@nameof(TaskListDto.LastChangeDate)" Caption="Дата последнего обновления"></DataGridColumn>
+    <DataGridColumn Field="@nameof(TaskListDto.Description)" Caption="Описание"></DataGridColumn>
+
+</DataGrid>
+
+@if (showContextMenu)
+{
+    <Div Position="Position.Fixed" Background="Background.Danger" Style="@($"left:{contextMenuPos.X}px;top:{contextMenuPos.Y}px;")">
+        <ListGroup>
+            <ListGroupItem Clicked="@(()=>OnContextItemEditClicked(contextMenuTask))">
+                <Icon Name="IconName.Edit" TextColor="TextColor.Secondary" /> Назначить
+            </ListGroupItem>
+        </ListGroup>
+
+        <ListGroup>
+            <ListGroupItem Clicked="@(()=>OnContextItemEditClicked(contextMenuTask))">
+                <Icon Name="IconName.Edit" TextColor="TextColor.Secondary" /> Редактировать
+            </ListGroupItem>
+        </ListGroup>
+
+        <ListGroup>
+            <ListGroupItem>
+                <Icon Name="IconName.Edit" TextColor="TextColor.Secondary" /> Установить статус
+                <ListGroup>
+                    @foreach (var status in taskStatuses)
+                    {
+                        <ListGroupItem Clicked="@(()=>ChangeStatus(contextMenuTask,status))">
+                            <Icon Name="IconName.ArrowRight" TextColor="TextColor.Secondary" />
+                        </ListGroupItem>
+                    }
+                </ListGroup>
+            </ListGroupItem>
+        </ListGroup>
+    </Div>
+}
+
+@code {
+
+    bool showContextMenu = false;
+
+    TaskListViewModel taskListViewModel = new();
+    TaskListDto selectedTask { get; set; }
+    TaskListDto contextMenuTask;
+    Point contextMenuPos;
+    List<string?> taskStatuses = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            taskListViewModel.Tasks = new List<TaskListDto>();
+            taskListViewModel = await httpClient.GetFromJsonAsync<TaskListViewModel>("Task/GetTaskList");
+            taskStatuses = await httpClient.GetFromJsonAsync<List<string?>>("Status");
+        }
+        catch (Exception exception)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    protected Task OnRowContextMenu(DataGridRowMouseEventArgs<TaskListDto> eventArgs)
+    {
+        showContextMenu = true;
+        contextMenuTask = eventArgs.Item;
+        contextMenuPos = eventArgs.MouseEventArgs.Client;
+
+        return Task.CompletedTask;
+    }
+    protected async Task OnContextItemEditClicked(TaskListDto task)
+    {
+        NavigationManager.NavigateTo("UpdateUser/" + task.Id);
+
+        showContextMenu = false;
+    }
+    protected async Task ChangeStatus(TaskListDto task, string status)
+    {
+        showContextMenu = false;
+    }
+}

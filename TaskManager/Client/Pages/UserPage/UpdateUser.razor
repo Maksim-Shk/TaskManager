@@ -1,0 +1,57 @@
+﻿@page "/UpdateUser/{Id:int}"
+@using TaskManager.Application.Users.Commands.UpdateUserCommand
+@using TaskManager.Application.Users.Queries.GetUserInfo;
+@inject HttpClient httpClient
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>Назначить задачу</PageTitle>
+
+<Card Margin="Margin.Is4.OnY">
+    <CardBody>
+        <TextEdit id="name" class="form-control" @bind-Text="@updateUserDto.Name">
+        </TextEdit>
+
+        <TextEdit id="surname" class="form-control" @bind-Text="@updateUserDto.Surname">
+
+        </TextEdit>
+
+        <DateEdit @bind-Date="updateUserDto.CreationDate" TValue="DateTime" Min="min" Max="DateTimeOffset.Now" DisplayFormat="dd/MM/Y" />
+    </CardBody>
+
+</Card>
+
+
+
+<Button Color="Color.Primary" Clicked="@OnSaveClicked"> Сохранить </Button>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    DateTimeOffset min = DateTimeOffset.Now.AddYears(-50);
+
+    private UserInfoDto userInfoDto = new();
+    UpdateUserDto updateUserDto = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            userInfoDto = await httpClient.GetFromJsonAsync<UserInfoDto>("User/UserInfo/" + Id);
+            updateUserDto.UserId = userInfoDto.Id;
+            updateUserDto.Name = userInfoDto.Name;
+            updateUserDto.Surname = userInfoDto.Surname;
+            updateUserDto.CreationDate = userInfoDto.CreatedDate;
+        }
+        catch (Exception exception)
+        {
+
+        }
+    }
+    private async Task OnSaveClicked()
+    {
+        var responce = await httpClient.PutAsJsonAsync("User/UpdateUser", updateUserDto);
+        NavigationManager.NavigateTo("/UserGrid");
+    }
+}

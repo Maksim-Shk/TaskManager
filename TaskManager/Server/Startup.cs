@@ -4,6 +4,7 @@ using TaskManager.Application.Common.Mappings;
 using System.Reflection;
 using TaskManager.Application.Interfaces;
 using TaskManager.Application;
+using TaskManager.Server.Extension;
 
 namespace TaskManager.Server
 {
@@ -42,6 +43,9 @@ namespace TaskManager.Server
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.ConfigureSwagger();
+            services.AddSwaggerGen();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -62,6 +66,12 @@ namespace TaskManager.Server
 
             app.UseRouting();
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("v1.0/swagger.json", "Main API");
+            });
 
             app.UseCors("AllowAll");
 

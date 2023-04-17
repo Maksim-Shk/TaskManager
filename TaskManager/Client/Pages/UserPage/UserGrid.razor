@@ -1,0 +1,80 @@
+﻿@page "/UserGrid"
+
+@using Blazorise.DataGrid
+
+@using System.Drawing;
+@using TaskManager.Application.Users.Queries.GetUserList
+
+@inject NavigationManager NavigationManager
+@inject HttpClient httpClient
+
+<PageTitle>Список задач</PageTitle>
+
+<DataGrid TItem="UserListDto"
+          Data="@userListViewModel.Users" Responsive
+          Filterable
+          Sortable
+          SortMode="DataGridSortMode.Multiple"
+          ShowPager
+          @bind-SelectedRow="@selectedUser"
+          RowContextMenu="@OnRowContextMenu"
+          RowContextMenuPreventDefault="true"
+          ShowPageSizes
+          PagerPosition="DataGridPagerPosition.Bottom"
+          PagerOptions="new(){ ButtonSize=Blazorise.Size.Medium}">
+
+    <DataGridColumn Field="@nameof(UserListDto.Name)" Caption="Имя"></DataGridColumn>
+    <DataGridColumn Field="@nameof(UserListDto.Surname)" Caption="Фамилия"></DataGridColumn>
+    <DataGridColumn Field="@nameof(UserListDto.Status)" Caption="Статус"></DataGridColumn>
+    <DataGridColumn Field="@nameof(UserListDto.CreatedDate)" Caption="Дата создания"></DataGridColumn>
+    <DataGridColumn Field="@nameof(UserListDto.LastChangeDate)" Caption="Дата последнего обновления"></DataGridColumn>
+</DataGrid>
+
+@if (showContextMenu)
+{
+    <Div Position="Position.Fixed" Background="Background.Danger" Style="@($"left:{contextMenuPos.X}px;top:{contextMenuPos.Y}px;")">
+        <ListGroup>
+            <ListGroupItem Clicked="@(()=>OnContextItemEditClicked(contextMenuUser))">
+                <Icon Name="IconName.Edit" TextColor="TextColor.Secondary" /> Редактировать
+            </ListGroupItem>
+        </ListGroup>
+    </Div>
+}
+
+
+@code {
+    bool showContextMenu = false;
+
+    UserListViewModel userListViewModel = new();
+    UserListDto selectedUser { get; set; }
+    UserListDto contextMenuUser;
+    Point contextMenuPos;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            userListViewModel.Users = new List<UserListDto>();
+            userListViewModel = await httpClient.GetFromJsonAsync<UserListViewModel>("User/UserList");
+
+        }
+        catch (Exception exception)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    protected Task OnRowContextMenu(DataGridRowMouseEventArgs<UserListDto> eventArgs)
+    {
+        showContextMenu = true;
+        contextMenuUser = eventArgs.Item;
+        contextMenuPos = eventArgs.MouseEventArgs.Client;
+
+        return Task.CompletedTask;
+    }
+    protected async Task OnContextItemEditClicked(UserListDto userListDto)
+    {
+        NavigationManager.NavigateTo("UpdateUser/" + userListDto.Id);
+
+        showContextMenu = false;
+    }
+}
