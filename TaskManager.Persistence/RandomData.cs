@@ -64,7 +64,7 @@ namespace TaskManager.Persistence
             return names[rand.Next(0, names.Length)];
         }
 
-        public string GetRandomSurname()
+        public string GetRandomSurname(string name)
         {
             Random rand = new();
             string[] surnames = new string[]{
@@ -120,11 +120,17 @@ namespace TaskManager.Persistence
     "Мартынов",
     "Куликов"
 };
-            return surnames[rand.Next(0, surnames.Length)];
+            string lastChar = name.Substring(name.Length - 1);
+            string surname = surnames[rand.Next(0, surnames.Length)];
+            if (lastChar == "а" || lastChar == "я")
+            {
+                surname += "а";
+            }
+            return surname;
         }
         public DateTime RandomDay()
         {
-            DateTime start = DateTime.UtcNow.AddDays(-100);
+            DateTime start = DateTime.UtcNow.AddDays(-200);
             Random gen = new();
             int range = ((TimeSpan)(DateTime.Today - start)).Days;
             DateTime randomData = start.AddDays(gen.Next(range));
