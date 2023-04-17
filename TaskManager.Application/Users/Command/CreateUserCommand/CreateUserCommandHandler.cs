@@ -24,8 +24,8 @@ namespace TaskManager.Application.Users.Commands.CreateUserCommand
                 Name = request.Name,
                 Surname = request.Surname,
                 Status = UserStatusEnum.Active,
-                CreationDate = DateTime.UtcNow,
-                LastChangeDate = DateTime.UtcNow
+                CreationDate = DateTime.Now,
+                LastChangeDate = DateTime.Now
             };
             await _dbContext.Users.AddAsync(user, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);

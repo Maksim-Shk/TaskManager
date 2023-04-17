@@ -39,11 +39,11 @@ namespace TaskManager.Persistence
                     .HasColumnName("surname");
 
                 entity.Property(e => e.CreationDate)
-                  .HasColumnType("timestamp with time zone")
+                  .HasColumnType("timestamp without time zone")
                   .HasColumnName("create_date");
 
                 entity.Property(e => e.LastChangeDate)
-                .HasColumnType("timestamp with time zone")
+                .HasColumnType("timestamp without time zone")
                 .HasColumnName("last_change_date");
 
                 entity.Property(e => e.Status)
@@ -79,11 +79,11 @@ namespace TaskManager.Persistence
                     .HasColumnName("description");
 
                 entity.Property(e => e.CreationDate)
-                    .HasColumnType("timestamp with time zone")
+                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("create_date");
 
                 entity.Property(e => e.LastChangeDate)
-                   .HasColumnType("timestamp with time zone")
+                   .HasColumnType("timestamp without time zone")
                    .HasColumnName("last_change_date");
 
                 entity.Property(e => e.Status)

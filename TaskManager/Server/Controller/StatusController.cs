@@ -22,7 +22,7 @@ namespace TaskManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<string?>>> GetStatus()
+        public async Task<ActionResult<List<string?>>> GetTaskStatus()
         {
             return Enum.GetValues(typeof(TaskStatusEnum))
                 .Cast<TaskStatusEnum>()

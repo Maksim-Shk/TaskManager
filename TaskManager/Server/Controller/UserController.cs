@@ -28,10 +28,10 @@ namespace TaskManager.Server.Controllers
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto updateUserDto)
         {
             var command = _mapper.Map<UpdateUserCommand>(updateUserDto);
-            command.UserId = updateUserDto.UserId;
             await Mediator.Send(command);
             return NoContent();
         }
+
         [HttpPost("CreateUser")]
         public async Task<ActionResult<int>> CreateUser([FromBody] CreateUserDto createUserDto)
         {

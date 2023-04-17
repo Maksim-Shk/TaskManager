@@ -26,7 +26,6 @@ namespace TaskManager.Persistence
     "Константин",
     "Лариса",
     "Леонид",
-    "Любовь",
     "Максим",
     "Марина",
     "Михаил",
@@ -130,7 +129,7 @@ namespace TaskManager.Persistence
         }
         public DateTime RandomDay()
         {
-            DateTime start = DateTime.UtcNow.AddDays(-200);
+            DateTime start = DateTime.Now.AddDays(-200);
             Random gen = new();
             int range = ((TimeSpan)(DateTime.Today - start)).Days;
             DateTime randomData = start.AddDays(gen.Next(range));

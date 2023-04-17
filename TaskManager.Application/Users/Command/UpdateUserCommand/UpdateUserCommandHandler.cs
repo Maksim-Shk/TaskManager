@@ -7,12 +7,12 @@ using System;
 
 namespace TaskManager.Application.Users.Commands.UpdateUserCommand
 {
-    public class GetTaskListQueryHandlers
+    public class UpdateUserCommandHandler
         : IRequestHandler<UpdateUserCommand>
     {
         private readonly ITaskManagerContext _dbContext;
 
-        public GetTaskListQueryHandlers(ITaskManagerContext dbContext) =>
+        public UpdateUserCommandHandler(ITaskManagerContext dbContext) =>
            _dbContext = dbContext;
 
         public async Task<Unit> Handle(UpdateUserCommand request,
@@ -28,7 +28,8 @@ namespace TaskManager.Application.Users.Commands.UpdateUserCommand
 
             user.Name = request.Name;
             user.Surname = request.Surname;
-            user.CreationDate = request.CreationDate.ToUniversalTime();
+            user.CreationDate = request.CreationDate; //.ToUniversalTime(); //.AddHours(DateTime.Now.Hour).AddMinutes(DateTime.Now.Minute).AddSeconds(DateTime.Now.Second);
+            user.LastChangeDate = DateTime.Now;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
