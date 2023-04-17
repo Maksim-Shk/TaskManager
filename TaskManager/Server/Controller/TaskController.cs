@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Application.Interfaces;
 using TaskManager.Application.Tasks.Queries.GetTaskList;
+using TaskManager.Application.Tasks.Queries.GetUserTaskList;
 
 namespace TaskManager.Server.Controllers
 {
@@ -24,6 +25,16 @@ namespace TaskManager.Server.Controllers
         public async Task<ActionResult<List<TaskListDto>>> SubdivisionGet()
         {
             var query = new GetTaskListQuery();
+            var vm = await Mediator.Send(query);
+            return Ok(vm);
+        }
+        [HttpGet("GetUserTaskList/{id}")]
+        public async Task<ActionResult<List<UserTaskListDto>>> GetUserTaskList(int id)
+        {
+            var query = new GetUserTaskListQuery
+            {
+                UserId = id
+            };
             var vm = await Mediator.Send(query);
             return Ok(vm);
         }
