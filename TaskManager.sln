@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Server", "TaskM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Client", "TaskManager\Client\TaskManager.Client.csproj", "{E2549A38-5DEC-492A-9EAE-1CCC8D2E9F68}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Shared", "TaskManager\Shared\TaskManager.Shared.csproj", "{C7758F41-89DF-4C32-8A38-BE32CE7C14F6}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{4BBC1844-26E7-4B58-A330-D8F192BFD7E1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{4DB9A064-2D88-422B-BB6B-1FB151E112CF}"
@@ -25,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Persistence", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{7250604D-8B2B-4532-829C-E12365789DDD}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{F877CF35-D554-44B1-88C8-DF86DE824639}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,10 +39,6 @@ Global
 		{E2549A38-5DEC-492A-9EAE-1CCC8D2E9F68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2549A38-5DEC-492A-9EAE-1CCC8D2E9F68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2549A38-5DEC-492A-9EAE-1CCC8D2E9F68}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C7758F41-89DF-4C32-8A38-BE32CE7C14F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7758F41-89DF-4C32-8A38-BE32CE7C14F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C7758F41-89DF-4C32-8A38-BE32CE7C14F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C7758F41-89DF-4C32-8A38-BE32CE7C14F6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EEDFF503-6A74-420E-9985-8D530AF2104B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EEDFF503-6A74-420E-9985-8D530AF2104B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEDFF503-6A74-420E-9985-8D530AF2104B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,6 +51,10 @@ Global
 		{148F88E7-B4BC-4C1F-ADFD-6E1E5F1A8229}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{148F88E7-B4BC-4C1F-ADFD-6E1E5F1A8229}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{148F88E7-B4BC-4C1F-ADFD-6E1E5F1A8229}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F877CF35-D554-44B1-88C8-DF86DE824639}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F877CF35-D554-44B1-88C8-DF86DE824639}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F877CF35-D554-44B1-88C8-DF86DE824639}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F877CF35-D554-44B1-88C8-DF86DE824639}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
