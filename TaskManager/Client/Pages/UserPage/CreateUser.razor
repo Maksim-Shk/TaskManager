@@ -1,0 +1,29 @@
+﻿@page "/CreateUser/"
+@using Application.Users.Commands.CreateUserCommand
+@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+
+<PageTitle>Создать пользователя</PageTitle>
+
+<Card Margin="Margin.Is4.OnY">
+    <CardBody Width="Width.Is25">
+        <h5>Имя</h5>
+        <TextEdit id="name" class="form-control" @bind-Text="@userDto.Name">
+        </TextEdit>
+        <h5>Фамилия</h5>
+        <TextEdit id="surname" class="form-control" @bind-Text="@userDto.Surname">
+        </TextEdit>
+    </CardBody>
+</Card>
+
+<Button Color="Color.Primary" Clicked="@OnSaveClicked"> Создать </Button>
+
+@code {
+    CreateUserDto userDto = new();
+
+    private async Task OnSaveClicked()
+    {
+        var httpResponse = httpClient.PostAsJsonAsync<CreateUserDto>("User/CreateUser", userDto);
+    }
+
+}
