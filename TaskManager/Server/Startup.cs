@@ -22,13 +22,8 @@ namespace TaskManager.Server
                 config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
                 config.AddProfile(new AssemblyMappingProfile(typeof(ITaskManagerContext).Assembly));
             });
-            services.AddApplication();
 
-            var connectionString = Configuration["DbConnection"];
-            services.AddDbContext<TaskManagerContext>(options =>
-            {
-                options.UseNpgsql(connectionString);
-            });
+            services.AddApplication();
             services.AddPersistence(Configuration);
 
             services.AddCors(options =>

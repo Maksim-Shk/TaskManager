@@ -16,7 +16,7 @@ services:
       context: .
       dockerfile: TaskManager/Server/Dockerfile
     environment:
-        - ConnectionStrings__DefaultConnection=User ID=postgres;Password=101001Zeus;Server=localhost;Port=5432;Database=task_manager;IntegratedSecurity=true;Pooling=true;
+        - ConnectionStrings__DbConnection=User ID=postgres;Password=101001Zeus;Server=app_db;Port=5432;Database=task_manager;IntegratedSecurity=true;Pooling=true;
         - ASPNETCORE_URLS=http://+:80
     networks:
         - dev

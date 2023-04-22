@@ -10,7 +10,7 @@ namespace TaskManager.Persistence
         public static IServiceCollection AddPersistence(this IServiceCollection
             services, IConfiguration configuration)
         {
-            var connectionString = configuration["DbConnection"];
+            var connectionString = configuration.GetConnectionString("DbConnection");
             services.AddDbContext<TaskManagerContext>(options =>
             {
                 options.UseNpgsql(connectionString);
