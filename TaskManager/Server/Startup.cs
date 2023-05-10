@@ -5,6 +5,7 @@ using System.Reflection;
 using TaskManager.Application.Interfaces;
 using TaskManager.Application;
 using TaskManager.Server.Extension;
+using TaskManager.Server.Middleware;
 
 namespace TaskManager.Server
 {
@@ -59,6 +60,7 @@ namespace TaskManager.Server
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
+            app.UseCustomExceptionHandler();
             app.UseRouting();
             app.UseHttpsRedirection();
 

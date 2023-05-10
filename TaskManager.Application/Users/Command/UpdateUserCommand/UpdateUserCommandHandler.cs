@@ -4,6 +4,8 @@ using System.Threading;
 using TaskManager.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
+using TaskManager.Application.Common.Exceptions;
+using TaskManager.Domain;
 
 namespace TaskManager.Application.Users.Commands.UpdateUserCommand
 {
@@ -23,7 +25,7 @@ namespace TaskManager.Application.Users.Commands.UpdateUserCommand
 
             if (user == null)
             {
-                throw new Exception("Пользователь не найден");
+                throw new NotFoundException(nameof(User), request.UserId);
             }
 
             user.Name = request.Name;
