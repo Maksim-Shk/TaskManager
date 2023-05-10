@@ -8,4 +8,5 @@ WebAPI CQRS + MediatR & AutoMapper,
 FluentValidation,
 Docker, 
 PostgreSQL,
-Swagger
+Swagger,
+Blazor (библиотека UI компонентов Blazorise)
